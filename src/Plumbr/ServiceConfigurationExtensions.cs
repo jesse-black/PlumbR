@@ -5,6 +5,9 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceConfigurationExtensions
     {
+        /// <summary>
+        /// Adds FluentValidation validation behavior for all IPipelineRequest<> request types in the assembly.
+        /// </summary>
         public static MediatRServiceConfiguration AddValidationBehaviorForAssemblyContaining<T>(this MediatRServiceConfiguration cfg)
         {
             var requestTypes = typeof(T).Assembly.GetTypes()
