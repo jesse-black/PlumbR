@@ -4,6 +4,7 @@
     <PackageId>PlumbR</PackageId>
     <Version>1.0.0-beta001</Version>
     <Authors>Jesse Black</Authors>
+    <Copyright>Copyright 2024 Jesse Black</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/jesse-black/PlumbR</PackageProjectUrl>
