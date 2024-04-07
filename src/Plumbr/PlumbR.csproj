@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>PlumbR</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Jesse Black</Authors>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="FluentValidation" Version="[11.9,12.0)" />
+    <PackageReference Include="MediatR" Version="[12.2,13.0)" />
+    <PackageReference Include="OneOf" Version="[3.0.263,4.0)" />
+    <PackageReference Include="OneOf.SourceGenerator" Version="[3.0.263,4.0)" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+</Project>
