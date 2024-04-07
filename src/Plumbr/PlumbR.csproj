@@ -2,9 +2,14 @@
 
   <PropertyGroup>
     <PackageId>PlumbR</PackageId>
-    <Version>0.1.0</Version>
+    <Version>1.0.0-beta001</Version>
     <Authors>Jesse Black</Authors>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/jesse-black/PlumbR</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jesse-black/PlumbR.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>aspnetcore;microservices;minimalapi;mediatr;fluentvalidation;oneof</PackageTags>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -20,5 +25,6 @@
 
   <ItemGroup>
     <None Include="../../README.md" Pack="true" PackagePath="\"/>
+    <None Include="../../LICENSE" Pack="true" PackagePath="\"/>
   </ItemGroup>
 </Project>
