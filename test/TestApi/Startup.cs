@@ -1,6 +1,6 @@
 using FluentValidation;
 using PlumbR.TestApi.Handlers.ParametersHandler;
-using PlumbR.TestApi.Handlers.TestHandler;
+using PlumbR.TestApi.Handlers.BodyHandler;
 
 namespace PlumbR.TestApi
 {
@@ -21,6 +21,7 @@ namespace PlumbR.TestApi
             services.AddSwaggerGen();
             services.AddRouting();
             services.AddAuthorization();
+            services.AddProblemDetails();
             services.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssemblyContaining<Startup>();
@@ -45,7 +46,7 @@ namespace PlumbR.TestApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/parameters/{Id:int}", Pipeline.HandleParameters<ParameterRequest, ParametersResult>);
-                endpoints.MapPost("/body", Pipeline.HandleBody<TestRequest, TestResult>);
+                endpoints.MapPost("/body", Pipeline.HandleBody<BodyRequest, BodyResult>);
             });
         }
     }
