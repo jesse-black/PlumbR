@@ -5,7 +5,11 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{47126947-17D8-4551-A04E-A5F71CF5B5CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "plumbr", "src\Plumbr\plumbr.csproj", "{B38787C4-3181-4F10-91D6-4FBF2DD3D0D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "plumbr", "src\PlumbR\PlumbR.csproj", "{B38787C4-3181-4F10-91D6-4FBF2DD3D0D5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{73647133-CDF7-4AFB-B646-2F6DC8E0451F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApi", "test\TestApi\TestApi.csproj", "{42354871-E307-425C-BDD0-8A6C9362407C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,8 +24,13 @@ Global
 		{B38787C4-3181-4F10-91D6-4FBF2DD3D0D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B38787C4-3181-4F10-91D6-4FBF2DD3D0D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B38787C4-3181-4F10-91D6-4FBF2DD3D0D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42354871-E307-425C-BDD0-8A6C9362407C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42354871-E307-425C-BDD0-8A6C9362407C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42354871-E307-425C-BDD0-8A6C9362407C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42354871-E307-425C-BDD0-8A6C9362407C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B38787C4-3181-4F10-91D6-4FBF2DD3D0D5} = {47126947-17D8-4551-A04E-A5F71CF5B5CE}
+		{42354871-E307-425C-BDD0-8A6C9362407C} = {73647133-CDF7-4AFB-B646-2F6DC8E0451F}
 	EndGlobalSection
 EndGlobal

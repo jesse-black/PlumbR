@@ -23,13 +23,7 @@ namespace PlumbR
             return Handle<TRequest, TResponse>(mediator, request, cancellationToken);
         }
 
-        public static Task<IResult> HandleQuery<TRequest, TResponse>(IMediator mediator, [FromQuery]TRequest request, CancellationToken cancellationToken)
-            where TRequest : IRequest<PipelineResult<TResponse>>
-        {
-            return Handle<TRequest, TResponse>(mediator, request, cancellationToken);
-        }
-
-        public static Task<IResult> HandleRoute<TRequest, TResponse>(IMediator mediator, [FromRoute]TRequest request, CancellationToken cancellationToken)
+        public static Task<IResult> HandleParameters<TRequest, TResponse>(IMediator mediator, [AsParameters]TRequest request, CancellationToken cancellationToken)
             where TRequest : IRequest<PipelineResult<TResponse>>
         {
             return Handle<TRequest, TResponse>(mediator, request, cancellationToken);
