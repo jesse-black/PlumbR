@@ -10,6 +10,14 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         public static MediatRServiceConfiguration AddValidationBehaviorForAssemblyContaining<T>(this MediatRServiceConfiguration cfg)
         {
+            return cfg.AddPipelineBehaviorForAssemblyContaining<T>(typeof(ValidationBehavior<,>));
+        }
+
+        /// <summary>
+        /// Adds the behavior for all IPipelineRequest<> request types in the assembly.
+        /// </summary>
+        public static MediatRServiceConfiguration AddPipelineBehaviorForAssemblyContaining<T>(this MediatRServiceConfiguration cfg, Type behaviorType)
+        {
             var requestTypes = typeof(T).Assembly.GetTypes()
                 .Where(t => t.GetInterfaces()
                     .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IPipelineRequest<>)))
@@ -22,8 +30,8 @@ namespace Microsoft.Extensions.DependencyInjection
                     ?.FirstOrDefault();
                 if (resultType != null)
                 {
-                    var behaviorType = typeof(ValidationBehavior<,>).MakeGenericType(requestType, resultType);
-                    cfg.AddBehavior(behaviorType);
+                    var genericBehaviorType = behaviorType.MakeGenericType(requestType, resultType);
+                    cfg.AddBehavior(genericBehaviorType);
                 }
             }
             return cfg;

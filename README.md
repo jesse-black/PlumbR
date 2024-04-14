@@ -30,6 +30,19 @@ services.AddMediatR(cfg =>
 });
 services.AddValidatorsFromAssemblyContaining<Startup>();
 ```
+To add other behaviors on `IPipelineBehavior<TRequest,
+PipelineResult<TResponse>>`, you can use
+`AddPipelineBehaviorForAssemblyContaining<T>()`. Normally MediatR's
+`AddOpenBehavior` would be used here, but it has trouble wiring up open
+behaviors when the result is another generic type like
+`PipelineRequest<TResponse>`.
+```csharp
+services.AddMediatR(cfg =>
+{
+    // ...
+    cfg.AddPipelineBehaviorForAssemblyContaining<Startup>(typeof(LoggerBehavior<>))
+});
+```
 
 ## Usage
 ### Handler, Request, and Result
