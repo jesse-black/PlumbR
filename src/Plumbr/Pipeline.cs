@@ -21,7 +21,6 @@ namespace PlumbR
             var result = await mediator.Send(request, cancellationToken);
             return result.Match(
                 success => Results.Ok(success),
-                invalid => Results.Problem(new ValidationProblemDetails(invalid.ToDictionary())),
                 problem => Results.Problem(problem)
             );
         }

@@ -6,8 +6,7 @@ APIs](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis?vi
 using [FluentValidation](https://github.com/FluentValidation/FluentValidation)
 to validate the MediatR requests, along with
 [OneOf](https://github.com/mcintyre321/OneOf) discriminated unions to allow the
-pipelines to return either success values, validation errors, or problem details
-from the handlers.
+pipelines to return success values or problem details from the handlers.
 
 ## Installation
 
@@ -30,7 +29,7 @@ services.AddMediatR(cfg =>
 });
 services.AddValidatorsFromAssemblyContaining<Startup>();
 ```
-To add other behaviors on `IPipelineBehavior<TRequest,
+To add other behaviors implementing `IPipelineBehavior<TRequest,
 PipelineResult<TResponse>>`, you can use
 `AddPipelineBehaviorForAssemblyContaining<T>()`. Normally MediatR's
 `AddOpenBehavior` would be used here, but it has trouble wiring up open
@@ -48,8 +47,8 @@ services.AddMediatR(cfg =>
 ### Handler, Request, and Result
 Request and Handler classes use `IPipelineRequest<TResult>` and
 `IPipelineHandler<TRequest, TResult>` interfaces to match up with the
-validators. the response `PipelineResult<TResult>` can be one of `TResult`,
-`ValidationResult`, or `ProblemDetails`.
+validators. the response `PipelineResult<TResult>` can be one of `TResult` or
+`ProblemDetails`.
 ```csharp
 public class BodyRequest : IPipelineRequest<BodyResult>
 {
@@ -85,7 +84,8 @@ public class BodyRequestValidator : AbstractValidator<BodyRequest>
 ```
 
 ### Endpoints
-* Pass `Pipeline.HandleBody<TRequest, TResult>` as the delegate to the endpoint mapping to bind the request using `[FromBody]`.
+* Pass `Pipeline.HandleBody<TRequest, TResult>` as the delegate to the endpoint
+  mapping to bind the request using `[FromBody]`.
 * Pass `Pipeline.HandleParameters<TRequest, TResult>` as the delegate to bind
   the request using `[AsParameters]`. This will allow binding each property on
   the request model from different sources including `[FromRoute]`,
@@ -99,8 +99,11 @@ app.UseEndpoints(endpoints =>
 ```
 
 ## API Sample
-See the [TestApi](https://github.com/jesse-black/PlumbR/tree/main/test/TestApi) project for a full sample API.
+See the [TestApi](https://github.com/jesse-black/PlumbR/tree/main/test/TestApi)
+project for a full sample API.
 
 ## License
-This project is licensed under the Apache License Version 2.0 - see the [LICENSE](https://github.com/jesse-black/PlumbR/blob/main/LICENSE) file for details.
+This project is licensed under the Apache License Version 2.0 - see the
+[LICENSE](https://github.com/jesse-black/PlumbR/blob/main/LICENSE) file for
+details.
 

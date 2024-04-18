@@ -1,6 +1,7 @@
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace PlumbR.Behaviors
 {
@@ -12,7 +13,7 @@ namespace PlumbR.Behaviors
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, PipelineResult<TResponse>>
         where TRequest : IRequest<PipelineResult<TResponse>>
     {
-        private readonly IEnumerable<IValidator<TRequest>> _validators;
+        private readonly IEnumerable<IValidator<TRequest>> validators;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidationBehavior{TRequest, TResponse}"/> class.
@@ -20,7 +21,7 @@ namespace PlumbR.Behaviors
         /// <param name="validators">The validators to be used for validating the request.</param>
         public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
         {
-            _validators = validators;
+            this.validators = validators;
         }
 
         /// <summary>
@@ -37,12 +38,12 @@ namespace PlumbR.Behaviors
         {
             var context = new ValidationContext<TRequest>(request);
 
-            var results = await Task.WhenAll(_validators.Select(validator => validator.ValidateAsync(context)));
+            var results = await Task.WhenAll(validators.Select(validator => validator.ValidateAsync(context)));
             var result = new ValidationResult(results);
 
             if (!result.IsValid)
             {
-                return result;
+                return new ValidationProblemDetails(result.ToDictionary());
             }
 
             return await next();

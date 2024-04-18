@@ -9,5 +9,5 @@ namespace PlumbR
     /// </summary>
     /// <typeparam name="TResult">The type of the successful result.</typeparam>
     [GenerateOneOf]
-    public partial class PipelineResult<TResult> : OneOfBase<TResult, ValidationResult, ProblemDetails> { }
+    public partial class PipelineResult<TResult> : OneOfBase<TResult, ProblemDetails> { }
 }
