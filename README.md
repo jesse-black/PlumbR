@@ -1,5 +1,5 @@
 # PlumbR
-PlumbR is a minimal microservices framework that leverages
+PlumbR is a minimal api microservices framework that leverages
 [MediatR](https://github.com/jbogard/MediatR) to provide handlers for [ASP.NET
 Core Minimal
 APIs](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis?view=aspnetcore-8.0),
@@ -71,7 +71,7 @@ public class BodyHandler : IPipelineHandler<BodyRequest, BodyResult>
 }
 ```
 
-### Validator
+### Validation
 Write validators as you normally would on the request types.
 ```csharp
 public class BodyRequestValidator : AbstractValidator<BodyRequest>
