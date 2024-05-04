@@ -3,8 +3,7 @@ using System.Net.Http.Json;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
-using PlumbR.TestApi.Handlers.BodyHandler;
-using PlumbR.TestApi.Handlers.ParametersHandler;
+using PlumbR.TestApi.Handlers;
 
 namespace PlumbR.IntegrationTests
 {
@@ -73,7 +72,7 @@ namespace PlumbR.IntegrationTests
         }
 
         [Fact]
-        public async Task PipelineBodyEndpoint_NegativeId_ReturnsUnprocessableWithProblemDetails()
+        public async Task PipelineBodyEndpoint_NegativeId_ReturnsProblemDetails()
         {
             // Arrange
             var client = factory.CreateClient();

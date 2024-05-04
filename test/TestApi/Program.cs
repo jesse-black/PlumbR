@@ -1,7 +1,6 @@
 using FluentValidation;
 using PlumbR;
-using PlumbR.TestApi.Handlers.BodyHandler;
-using PlumbR.TestApi.Handlers.ParametersHandler;
+using PlumbR.TestApi.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,8 +8,8 @@ builder.Services.AddRouting();
 builder.Services.AddProblemDetails();
 builder.Services.AddMediatR(cfg =>
 {
-    cfg.RegisterServicesFromAssemblyContaining<Program>();
-    cfg.AddValidationBehaviorForAssemblyContaining<Program>();
+  cfg.RegisterServicesFromAssemblyContaining<Program>();
+  cfg.AddValidationBehaviorForAssemblyContaining<Program>();
 });
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
