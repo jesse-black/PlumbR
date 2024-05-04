@@ -5,13 +5,18 @@ namespace PlumbR.TestApi.Handlers;
 
 public class ParametersHandler : IPipelineHandler<ParameterRequest, ParametersResult>
 {
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+  private readonly TestService service;
+
+  public ParametersHandler(TestService service) {
+    this.service = service;
+  }
+
   public async Task<PipelineResult<ParametersResult>> Handle(ParameterRequest request, CancellationToken cancellationToken)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
   {
+    await service.SaveTag(request.Id, request.Tag, cancellationToken);
     return new ParametersResult
     {
-      Message = $"Your ID {request.Id} has tag {request.Tag}."
+      Message = $"Your ID {request.Id} with tag {request.Tag} was saved."
     };
   }
 }

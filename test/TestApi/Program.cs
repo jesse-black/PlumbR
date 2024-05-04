@@ -1,5 +1,6 @@
 using FluentValidation;
 using PlumbR;
+using PlumbR.TestApi;
 using PlumbR.TestApi.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,8 @@ builder.Services.AddMediatR(cfg =>
   cfg.AddValidationBehaviorForAssemblyContaining<Program>();
 });
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+builder.Services.AddScoped<TestService>();
 
 var app = builder.Build();
 

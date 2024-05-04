@@ -24,8 +24,8 @@ pipeline handlers.
 ```csharp
 services.AddMediatR(cfg =>
 {
-    cfg.RegisterServicesFromAssemblyContaining<Startup>();
-    cfg.AddValidationBehaviorForAssemblyContaining<Startup>();
+  cfg.RegisterServicesFromAssemblyContaining<Startup>();
+  cfg.AddValidationBehaviorForAssemblyContaining<Startup>();
 });
 services.AddValidatorsFromAssemblyContaining<Startup>();
 ```
@@ -38,8 +38,8 @@ behaviors when the result is another generic type like
 ```csharp
 services.AddMediatR(cfg =>
 {
-    // ...
-    cfg.AddPipelineBehaviorForAssemblyContaining<Startup>(typeof(LoggerBehavior<>))
+  // ...
+  cfg.AddPipelineBehaviorForAssemblyContaining<Startup>(typeof(LoggerBehavior<>))
 });
 ```
 
@@ -47,27 +47,49 @@ services.AddMediatR(cfg =>
 ### Handler, Request, and Result
 Request and Handler classes use `IPipelineRequest<TResult>` and
 `IPipelineHandler<TRequest, TResult>` interfaces to match up with the
-validators. the response `PipelineResult<TResult>` can be one of `TResult` or
-`ProblemDetails`.
+validators. the return value `PipelineResult<TResult>` can be one of `TResult`
+or `ProblemDetails`.
 ```csharp
 public class BodyRequest : IPipelineRequest<BodyResult>
 {
-    public required int Id { get; init; }
-    public required string Name { get; set; }
+  public required int Id { get; init; }
+  public required string Name { get; set; }
 }
+
 public class BodyResult
 {
-    public required string Message { get; init; }
+  public required string Message { get; init; }
 }
+
 public class BodyHandler : IPipelineHandler<BodyRequest, BodyResult>
 {
-    public async Task<PipelineResult<BodyResult>> Handle(BodyRequest request, CancellationToken cancellationToken)
+  private readonly TestService service;
+
+  public BodyHandler(TestService service)
+  {
+    this.service = service;
+  }
+
+  public async Task<PipelineResult<BodyResult>> Handle(BodyRequest request, CancellationToken cancellationToken)
+  {
+    try
     {
-        return new BodyResult
-        {
-            Message = $"Hello, {request.Name}! Your ID is {request.Id}."
-        };
+      await service.SaveId(request.Id, cancellationToken);
     }
+    catch (SaveFailedException e)
+    {
+      return new ProblemDetails
+      {
+        Status = StatusCodes.Status422UnprocessableEntity,
+        Title = e.Message
+      };
+    }
+
+    return new BodyResult
+    {
+      Message = $"Hello, {request.Name}! Your ID {request.Id} was saved."
+    };
+  }
 }
 ```
 
