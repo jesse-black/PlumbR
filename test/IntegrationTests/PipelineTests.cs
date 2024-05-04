@@ -3,19 +3,18 @@ using System.Net.Http.Json;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
-using PlumbR.TestApi;
 using PlumbR.TestApi.Handlers.BodyHandler;
 using PlumbR.TestApi.Handlers.ParametersHandler;
 
 namespace PlumbR.IntegrationTests
 {
-    public class PipelineTests : IClassFixture<WebApplicationFactory<Startup>>
+    public class PipelineTests : IClassFixture<WebApplicationFactory<Program>>
     {
-        private readonly WebApplicationFactory<Startup> factory;
+        private readonly WebApplicationFactory<Program> factory;
 
         public PipelineTests()
         {
-            factory = new WebApplicationFactory<Startup>().WithWebHostBuilder(builder =>
+            factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
             {
                 builder.UseEnvironment("Test");
             });

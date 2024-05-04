@@ -91,11 +91,8 @@ public class BodyRequestValidator : AbstractValidator<BodyRequest>
   the request model from different sources including `[FromRoute]`,
   `[FromQuery]`, `[FromBody]`, etc.
 ```csharp
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapGet("/parameters/{Id:int}", Pipeline.HandleParameters<ParameterRequest, ParametersResult>);
-    endpoints.MapPost("/body", Pipeline.HandleBody<BodyRequest, BodyResult>);
-});
+app.MapGet("/parameters/{Id:int}", Pipeline.HandleParameters<ParameterRequest, ParametersResult>);
+app.MapPost("/body", Pipeline.HandleBody<BodyRequest, BodyResult>);
 ```
 
 ## API Sample
