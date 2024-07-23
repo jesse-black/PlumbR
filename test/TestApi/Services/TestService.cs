@@ -1,4 +1,4 @@
-namespace PlumbR.TestApi;
+namespace PlumbR.TestApi.Services;
 
 public class TestService
 {

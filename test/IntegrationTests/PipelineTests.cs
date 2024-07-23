@@ -4,12 +4,18 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
+using PlumbR.TestApi;
 using PlumbR.TestApi.Handlers;
+using PlumbR.TestApi.Services;
 
 namespace PlumbR.IntegrationTests;
 
 public class PipelineTests : IClassFixture<WebApplicationFactory<Program>>
 {
+  private TestLogger<LoggerBehavior<BodyRequest, BodyResult>>? mockLogger;
   private readonly WebApplicationFactory<Program> factory;
 
   public PipelineTests(WebApplicationFactory<Program> factory)
@@ -17,6 +23,14 @@ public class PipelineTests : IClassFixture<WebApplicationFactory<Program>>
     this.factory = factory.WithWebHostBuilder(builder =>
     {
       builder.UseEnvironment("Test");
+      builder.ConfigureServices(services =>
+      {
+        services.AddScoped<TestLogger<LoggerBehavior<BodyRequest, BodyResult>>>(sp =>{
+          var logger = sp.GetRequiredService<ILogger<LoggerBehavior<BodyRequest, BodyResult>>>();
+          mockLogger = Substitute.For<TestLogger<LoggerBehavior<BodyRequest, BodyResult>>>(logger);
+          return mockLogger;
+        });
+      });
     });
   }
 
@@ -121,5 +135,30 @@ public class PipelineTests : IClassFixture<WebApplicationFactory<Program>>
       Title = "Failed to save the data.",
       Type = "https://tools.ietf.org/html/rfc4918#section-11.2"
     });
+  }
+
+  [Fact]
+  public async Task PipelineEndpoint_LogWasCalled()
+  {
+    // Arrange
+    var client = factory.CreateClient();
+
+    // Act
+    var response = await client.PostAsJsonAsync("/body", new
+    {
+      Name = "Test",
+      Id = 19
+    });
+
+    // Assert
+    response.EnsureSuccessStatusCode();
+    var content = await response.Content.ReadFromJsonAsync<BodyResult>();
+    content.Should().BeEquivalentTo(new BodyResult
+    {
+      Message = "Hello, Test! Your ID 19 was saved."
+    });
+    mockLogger.Should().NotBeNull();
+    mockLogger!.Received().LogRequest(Arg.Any<BodyRequest>());
+    mockLogger!.Received().LogResult(Arg.Any<BodyResult>());
   }
 }

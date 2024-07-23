@@ -9,41 +9,38 @@ to validate the MediatR requests, along with
 pipelines to return success values or problem details from the handlers.
 
 ## Installation
-
 Install the package via NuGet:
-
 ```bash
 dotnet add package PlumbR
 ```
 
 ## Configuration
 To set up PlumbR, first configure MediatR and FluentValidation as usual, then
-add `cfg.AddValidationBehaviorForAssemblyContaining<Startup>()` to `AddMediatR`
+add `cfg.AddValidationBehaviorForAssemblyContaining<>()` to `AddMediatR`
 to wire up the behavior that runs FluentValidation validators before the
 pipeline handlers.
 ```csharp
-services.AddMediatR(cfg =>
+builder.Services.AddMediatR(cfg =>
 {
-  cfg.RegisterServicesFromAssemblyContaining<Startup>();
-  cfg.AddValidationBehaviorForAssemblyContaining<Startup>();
+  cfg.RegisterServicesFromAssemblyContaining<Program>();
+  cfg.AddValidationBehaviorForAssemblyContaining<Program>();
 });
-services.AddValidatorsFromAssemblyContaining<Startup>();
-```
-To add other behaviors implementing `IPipelineBehavior<TRequest,
-PipelineResult<TResponse>>`, you can use
-`AddPipelineBehaviorForAssemblyContaining<T>()`. Normally MediatR's
-`AddOpenBehavior` would be used here, but it has trouble wiring up open
-behaviors when the result is another generic type like
-`PipelineRequest<TResponse>`.
-```csharp
-services.AddMediatR(cfg =>
-{
-  // ...
-  cfg.AddPipelineBehaviorForAssemblyContaining<Startup>(typeof(LoggerBehavior<>))
-});
+services.AddValidatorsFromAssemblyContaining<Program>();
 ```
 
 ## Usage
+### Endpoints
+* Pass `Pipeline.HandleBody<TRequest, TResult>` as the delegate to the endpoint
+  mapping to bind the request using `[FromBody]`.
+* Pass `Pipeline.HandleParameters<TRequest, TResult>` as the delegate to bind
+  the request using `[AsParameters]`. This will allow binding each property on
+  the request model from different sources including `[FromRoute]`,
+  `[FromQuery]`, `[FromBody]`, etc.
+```csharp
+app.MapGet("/parameters/{Id:int}", Pipeline.HandleParameters<ParameterRequest, ParametersResult>);
+app.MapPost("/body", Pipeline.HandleBody<BodyRequest, BodyResult>);
+```
+
 ### Handler, Request, and Result
 Request and Handler classes use `IPipelineRequest<TResult>` and
 `IPipelineHandler<TRequest, TResult>` interfaces to match up with the
@@ -105,16 +102,40 @@ public class BodyRequestValidator : AbstractValidator<BodyRequest>
 }
 ```
 
-### Endpoints
-* Pass `Pipeline.HandleBody<TRequest, TResult>` as the delegate to the endpoint
-  mapping to bind the request using `[FromBody]`.
-* Pass `Pipeline.HandleParameters<TRequest, TResult>` as the delegate to bind
-  the request using `[AsParameters]`. This will allow binding each property on
-  the request model from different sources including `[FromRoute]`,
-  `[FromQuery]`, `[FromBody]`, etc.
+### Pipeline Behaviors
+Implement `IPipelineBehavior<TRequest, PipelineResult<TResponse>>` for
+preprocessing and postprocessing of requests and responses:
 ```csharp
-app.MapGet("/parameters/{Id:int}", Pipeline.HandleParameters<ParameterRequest, ParametersResult>);
-app.MapPost("/body", Pipeline.HandleBody<BodyRequest, BodyResult>);
+public class LoggerBehavior<TRequest, TResult> : IPipelineBehavior<TRequest, PipelineResult<TResult>>
+  where TRequest : notnull
+{
+  private readonly ILogger<LoggerBehavior<TRequest, TResult>> logger;
+
+  public LoggerBehavior(ILogger<LoggerBehavior<TRequest, TResult>> logger)
+  {
+    this.logger = logger;
+  }
+
+  public async Task<PipelineResult<TResult>> Handle(TRequest request, RequestHandlerDelegate<PipelineResult<TResult>> next, CancellationToken cancellationToken)
+  {
+    logger.LogInformation("Handling request: {request}", JsonSerializer.Serialize(request));
+    var result = await next();
+    logger.LogInformation("Handled request with result: {response}", JsonSerializer.Serialize(result));
+    return result;
+  }
+}
+```
+To automatically register generic behaviors for all request and response types,
+you can use `AddPipelineBehaviorForAssemblyContaining<T>()`. Normally MediatR's
+`AddOpenBehavior` would be used here, but it has trouble wiring up open
+behaviors when the result is another generic type like
+`PipelineRequest<TResponse>`.
+```csharp
+services.AddMediatR(cfg =>
+{
+  // ...
+  cfg.AddPipelineBehaviorForAssemblyContaining<Program>(typeof(LoggerBehavior<,>));
+});
 ```
 
 ## API Sample

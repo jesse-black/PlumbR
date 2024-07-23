@@ -2,6 +2,7 @@ using FluentValidation;
 using PlumbR;
 using PlumbR.TestApi;
 using PlumbR.TestApi.Handlers;
+using PlumbR.TestApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,10 +12,12 @@ builder.Services.AddMediatR(cfg =>
 {
   cfg.RegisterServicesFromAssemblyContaining<Program>();
   cfg.AddValidationBehaviorForAssemblyContaining<Program>();
+  cfg.AddPipelineBehaviorForAssemblyContaining<Program>(typeof(LoggerBehavior<,>));
 });
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 builder.Services.AddScoped<TestService>();
+builder.Services.AddScoped(typeof(TestLogger<>));
 
 var app = builder.Build();
 
